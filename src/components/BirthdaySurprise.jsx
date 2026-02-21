@@ -179,8 +179,11 @@ export default function BirthdaySurprise() {
     const codeRef = useRef(null);
     const audioRef = useRef(null);
     const heartbeatRef = useRef(null);
+    const audioCtxRef = useRef(null);
     const [trackIndex, setTrackIndex] = useState(0);
     const [started, setStarted] = useState(false);
+    const [soundAllowed, setSoundAllowed] = useState(false);
+    const [showSoundPrompt, setShowSoundPrompt] = useState(false);
     const [showText, setShowText] = useState(false);
     const [showPlayer, setShowPlayer] = useState(false);
     const sceneDataRef = useRef(null);
@@ -323,7 +326,9 @@ export default function BirthdaySurprise() {
             heartbeatRef.current.currentTime = 0;
             heartbeatRef.current = null;
         }
+        // Create the audio element only after a user gesture enabled audio context
         audioRef.current = new Audio(PLAYLIST[0].src);
+        // If we created/resumed an AudioContext on user gesture, playback should be allowed.
         audioRef.current.play().catch(() => { });
 
 
@@ -445,6 +450,43 @@ export default function BirthdaySurprise() {
         setShowPlayer(true);
     };
 
+    // Called from a user gesture (button) to ensure AudioContext is created/resumed without starting animation
+    const enableSoundOnly = async () => {
+        try {
+            if (!audioCtxRef.current && (window.AudioContext || window.webkitAudioContext)) {
+                audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtxRef.current) await audioCtxRef.current.resume();
+            // play a tiny silent pulse to ensure playback is permitted
+            try {
+                const gain = audioCtxRef.current.createGain();
+                gain.gain.value = 0;
+                const osc = audioCtxRef.current.createOscillator();
+                osc.connect(gain);
+                gain.connect(audioCtxRef.current.destination);
+                osc.start();
+                osc.stop(audioCtxRef.current.currentTime + 0.05);
+            } catch (e) { /* ignore */ }
+            setSoundAllowed(true);
+        } catch (err) {
+            console.warn('AudioContext resume failed', err);
+        }
+        setShowSoundPrompt(false);
+        try { localStorage.setItem('soundPromptDismissed', '1'); } catch (e) { }
+    };
+
+    const dismissSoundPrompt = () => {
+        setShowSoundPrompt(false);
+        try { localStorage.setItem('soundPromptDismissed', '1'); } catch (e) { }
+    };
+
+    useEffect(() => {
+        try {
+            const dismissed = localStorage.getItem('soundPromptDismissed');
+            if (!dismissed) setShowSoundPrompt(true);
+        } catch (e) { /* ignore */ }
+    }, []);
+
     return (
         <div id="main">
             <div id="wrap">
@@ -456,6 +498,18 @@ export default function BirthdaySurprise() {
                         </div>
                     )}
                 </div>
+                {showSoundPrompt && (
+                    <div className="sound-permission-modal">
+                        <div className="modal-inner">
+                            <h3>Enable sound for this page</h3>
+                            <p>To hear the music, please allow sound by clicking Enable.</p>
+                            <div className="modal-actions">
+                                <button className="btn" onClick={enableSoundOnly}>Enable</button>
+                                <button className="btn secondary" onClick={dismissSoundPrompt}>Continue without sound</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div id="text">
                     <div id="code" ref={codeRef}
                         style={{ display: showText ? 'block' : 'none' }} />
