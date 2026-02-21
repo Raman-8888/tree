@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Ruthie&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: white;
+  font-size: 17.5px;
+  font-family: sans-serif;
+  overflow: auto;
+}
+
+a {
+  color: white;
+  font-size: 17.5px;
+}
+
+#main {
+  width: 100%;
+}
+
+#wrap {
+  position: relative;
+  margin: 0 auto;
+  width: 1100px;
+  height: 680px;
+  margin-top: 10px;
+}
+
+#three-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#text {
+  width: 340px;
+  height: 560px;
+  left: 160px;
+  top: 80px;
+  position: absolute;
+}
+
+#code {
+  display: none;
+  color: rgb(196, 255, 255);
+  font-family: 'Ruthie', cursive;
+  font-size: 28px;
+  margin-top: 70px;
+  line-height: 38px;
+  font-weight: normal;
+}
+
+#code .char {
+  display: inline-block;
+  opacity: 0;
+  animation: charFadeIn 0.6s ease forwards;
+  filter: blur(2px);
+}
+
+@keyframes charFadeIn {
+  0% {
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(4px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+#code.visible {
+  display: block;
+}
+
+#clock-box {
+  position: absolute;
+  left: 60px;
+  top: 550px;
+  font-size: 35px;
+  display: none;
+}
+
+#clock-box a {
+  font-size: 35px;
+  text-decoration: none;
+}
+
+#clock {
+  margin-left: 48px;
+}
+
+#clock .digit {
+  font-size: 80px;
+}
+
+#three-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#error {
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 60px;
+  display: none;
+}
+
+.hand {
+  cursor: pointer;
+}
+
+.say {
+  margin-left: 5px;
+}
+
+.space {
+  margin-right: 150px;
+}
+
+#message-box {
+  position: absolute;
+  margin-top: 450px;
+  font-size: 31px;
+  font-family: 'Ruthie', cursive;
+}
+
+/* Click Me overlay on heart */
+.click-me-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-family: 'Ruthie', cursive;
+  font-size: 32px;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(255, 105, 180, 0.8), 0 0 20px rgba(255, 20, 147, 0.5);
+  animation: clickMePulse 1.2s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes clickMePulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* ── Music Player ── */
+.music-player {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 30px;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 182, 193, 0.2);
+  backdrop-filter: blur(8px);
+  animation: playerFadeIn 1s ease forwards;
+}
+
+@keyframes playerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cd-container {
+  flex-shrink: 0;
+}
+
+.cd-disc {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+      #1a1a2e, #2d1b4e, #1a1a2e, #3d1b5e, #1a1a2e, #2d1b4e, #1a1a2e);
+  position: relative;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.3), inset 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.cd-disc.spinning {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cd-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 182, 193, 0.15);
+}
+
+.cd-ring-1 {
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+}
+
+.cd-ring-2 {
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+}
+
+.cd-ring-3 {
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+}
+
+.cd-hole {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #000;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 182, 193, 0.3);
+}
+
+.cd-label {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #ff69b4 0%, #c0306f 100%);
+  box-shadow: 0 0 6px rgba(255, 105, 180, 0.5);
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.song-name {
+  font-family: 'Ruthie', cursive;
+  font-size: 24px;
+  color: #ffc0cb;
+  letter-spacing: 1px;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.control-btn {
+  background: none;
+  border: 1px solid rgba(255, 182, 193, 0.3);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffc0cb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+  background: rgba(255, 105, 180, 0.15);
+  border-color: #ff69b4;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+}
+
+.play-btn {
+  width: 44px;
+  height: 44px;
+  border-color: rgba(255, 105, 180, 0.5);
+}
+
+.play-btn:hover {
+  background: rgba(255, 105, 180, 0.25);
+}
